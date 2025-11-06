@@ -1,0 +1,8 @@
+# Ignore sensitive or local config files
+.env
+
+# Ignore system or IDE files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

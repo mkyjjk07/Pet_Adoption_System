@@ -1,0 +1,50 @@
+body {
+    background-color: #fefefe;
+    font-family: 'Poppins', sans-serif;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('assets/images/banner.jpg') no-repeat center center/cover;
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+    text-align: center;
+}
+.hero h1 {
+    font-size: 3.2rem;
+    margin-bottom: 0.5rem;
+}
+.hero p {
+    font-size: 1.2rem;
+}
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+}
+.card-title {
+    font-weight: bold;
+    color: #333;
+}
+footer {
+    background-color: #212529;
+    color: white;
+    padding: 20px 0;
+}
+.btn-primary {
+    background-color: #ff6f61;
+    border-color: #ff6f61;
+}
+.btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+}
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+}

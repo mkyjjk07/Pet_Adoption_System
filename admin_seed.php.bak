@@ -1,0 +1,12 @@
+<?php
+include 'includes/config.php';
+
+$email = "admin001@petnest.com";
+$password = password_hash("admin123", PASSWORD_DEFAULT);
+
+$sql = "UPDATE admins SET password='$password' WHERE email='$email'";
+if (mysqli_query($conn, $sql)) {
+    echo "Password updated successfully!";
+} else {
+    echo "Error: " . mysqli_error($conn);
+}
