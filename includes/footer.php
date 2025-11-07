@@ -5,6 +5,7 @@
     <p class="mb-0">Follow us on 
         <a href="#" class="text-white"><i class="fab fa-facebook-f mx-1"></i></a>
         <a href="#" class="text-white"><i class="fab fa-instagram mx-1"></i></a>
+        <a href="#" class="text-white"><i class="fab fa-twitter mx-1"></i></a>
  
     </p>
 </footer>
