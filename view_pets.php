@@ -10,10 +10,10 @@ include 'includes/config.php';
   <title>All Pets | PetNest</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <?php include 'includes/navbar.php'; ?>
@@ -42,7 +42,7 @@ include 'includes/config.php';
       </select>
     </div>
     <div class="col-md-3">
-      <input type="text" name="name" class="form-control" placeholder="pet name">
+      <input type="text" name="name" class="form-control" placeholder="Pet name">
     </div>
     <div class="col-md-2">
       <input type="number" name="age" class="form-control" placeholder="Max Age">
@@ -55,12 +55,9 @@ include 'includes/config.php';
     </div>
   </form>
 
-
   <div class="row row-cols-1 row-cols-md-3 g-4" id="pets-container">
-    
   </div>
 </div>
-
 
 <div class="modal fade" id="petModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -90,11 +87,12 @@ include 'includes/config.php';
   </div>
 </div>
 
-
 <?php include 'includes/footer.php'; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+const userRole = "<?php echo $_SESSION['role'] ?? 'guest'; ?>"; // get user role
+
 function fetchPets() {
     const formData = new FormData(document.querySelector("#filterForm"));
     const params = new URLSearchParams(formData).toString();
@@ -133,24 +131,20 @@ function fetchPets() {
             document.getElementById("pets-container").innerHTML = "<p class='text-danger'>Error loading pets.</p>";
             console.error(err);
         });
-    }
+}
 
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("#filterForm");
 
-    
-    document.addEventListener("DOMContentLoaded", () => {
-        const form = document.querySelector("#filterForm");
-    
-       
-        fetchPets();
-    
-       
-        form.querySelectorAll("select, input").forEach(el => {
-            el.addEventListener("input", fetchPets);
-            el.addEventListener("change", fetchPets);
-        });
+    fetchPets();
+
+    form.querySelectorAll("select, input").forEach(el => {
+        el.addEventListener("input", fetchPets);
+        el.addEventListener("change", fetchPets);
     });
+});
 
-    function showPetDetails(pet) {
+function showPetDetails(pet) {
     document.getElementById("petImage").src = "assets/images/pet-uploads/" + pet.image;
     document.getElementById("petName").textContent = pet.name;
     document.getElementById("petType").textContent = pet.type;
@@ -159,10 +153,28 @@ function fetchPets() {
     document.getElementById("petGender").textContent = pet.gender;
     document.getElementById("petPrice").textContent = pet.price;
     document.getElementById("petDescription").textContent = pet.description;
-    document.getElementById("adoptBtn").href = "adopt_pet.php?pet_id=" + pet.pet_id;
+
+    const adoptBtn = document.getElementById("adoptBtn");
+    
+    if(userRole === "guest") {
+        adoptBtn.href = "#";
+        adoptBtn.onclick = function(e){
+            e.preventDefault();
+            Swal.fire({
+                icon: 'info',
+                title: 'Upgrade Required',
+                text: 'You need to upgrade to Adopter to adopt a pet!',
+                confirmButtonText: 'OK'
+            });
+        };
+    } else {
+        adoptBtn.href = "adopt_pet.php?pet_id=" + pet.pet_id;
+        adoptBtn.onclick = null;
+    }
+
     var petModal = new bootstrap.Modal(document.getElementById('petModal'));
     petModal.show();
-    }
+}
 </script>
 </body>
 </html>

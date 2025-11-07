@@ -22,9 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image_tmp = $_FILES['image']['tmp_name'];
     $image_path = "assets/images/pet-uploads/" . basename($image);
 
+    $added_by = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : $_SESSION['user_id'];
+
     if (move_uploaded_file($image_tmp, $image_path)) {
-        $stmt = $conn->prepare("INSERT INTO pets (name, type, breed, age, gender, description, image, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssisssd", $name, $type, $breed, $age, $gender, $description, $image, $price);
+        $stmt = $conn->prepare("INSERT INTO pets (name, type, breed, age, gender, description, image, price, added_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssisssdi", $name, $type, $breed, $age, $gender, $description, $image, $price, $added_by);
 
         if ($stmt->execute()) {
             $message = "✅ Pet added successfully!";
@@ -36,9 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "user_dashboard.php";
+$dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "dashboard.php";
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +49,6 @@ $dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "user_d
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-
 <div class="container mt-5">
     <div class="card p-4 mx-auto" style="max-width: 700px;">
         <h2 class="mb-4 text-center"><i class="fa fa-paw me-2"></i>Add a New Pet</h2>
@@ -109,6 +109,5 @@ $dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "user_d
         </form>
     </div>
 </div>
-
 </body>
 </html>

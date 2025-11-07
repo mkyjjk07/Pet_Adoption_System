@@ -5,15 +5,20 @@ include 'includes/config.php';
 $id = intval($_GET['id']);
 $message = "";
 
-// Fetch pet details
-if(isset($_SESSION['user_id'])) {
+// Determine if admin or volunteer
+if (isset($_SESSION['admin_id'])) {
+    // Admin or Super Admin can access any pet
+    $stmt = $conn->prepare("SELECT * FROM pets WHERE pet_id=?");
+    $stmt->bind_param("i", $id);
+} elseif (isset($_SESSION['user_id'])) {
+    // Volunteer can access only their added pets
     $user_id = $_SESSION['user_id'];
     $stmt = $conn->prepare("SELECT * FROM pets WHERE pet_id=? AND added_by_user_id=?");
     $stmt->bind_param("ii", $id, $user_id);
 } else {
-    $stmt = $conn->prepare("SELECT * FROM pets WHERE pet_id=?");
-    $stmt->bind_param("i", $id);
+    die("Unauthorized access. Please log in.");
 }
+
 $stmt->execute();
 $result = $stmt->get_result();
 $pet = $result->fetch_assoc();
@@ -21,6 +26,7 @@ $pet = $result->fetch_assoc();
 if (!$pet) {
     die("Pet not found.");
 }
+
 
 // Handle update
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -58,14 +64,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($update->execute()) {
         $message = "✅ Pet updated successfully.";
-        $dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "user_dashboard.php";
+        $dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "dashboard.php";
         header("refresh:2;url=$dashboard_link");
     } else {
         $message = "❌ Failed to update pet.";
     }
 }
 
-$dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "user_dashboard.php";
+$dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "dashboard.php";
 ?>
 
 <!DOCTYPE html>

@@ -1,14 +1,15 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: admin_login.php");
+include 'includes/config.php';
+
+// Check login for both admin & volunteer
+if (!isset($_SESSION['admin_id']) && !isset($_SESSION['user_id'])) {
+    header("Location: login.php");
     exit();
 }
 
-include 'includes/config.php';
-
-// Handle status update
-if (isset($_GET['action'], $_GET['id'])) {
+// Handle status update (admin only)
+if (isset($_SESSION['admin_id']) && isset($_GET['action'], $_GET['id'])) {
     $action = $_GET['action'];
     $request_id = intval($_GET['id']);
 
@@ -31,6 +32,45 @@ if (isset($_GET['action'], $_GET['id'])) {
         exit();
     }
 }
+
+// Fetch requests
+if (isset($_SESSION['admin_id'])) {
+    // Admin: can view all
+    $query = "SELECT ar.request_id, ar.requested_on, ar.status, 
+                     ar.full_name, ar.email, ar.phone, ar.address, ar.experience, ar.reason,
+                     u.name AS user_name, 
+                     p.name AS pet_name, p.type, p.breed, p.price
+              FROM adoption_requests ar
+              JOIN users u ON ar.user_id = u.user_id
+              JOIN pets p ON ar.pet_id = p.pet_id
+              ORDER BY ar.requested_on DESC";
+    $stmt = $conn->prepare($query);
+} else {
+    // Volunteer: only their pets
+    $user_id = $_SESSION['user_id'];
+    $query = "SELECT ar.request_id, ar.requested_on, ar.status, 
+                     ar.full_name, ar.email, ar.phone, ar.address, ar.experience, ar.reason,
+                     u.name AS user_name, 
+                     p.name AS pet_name, p.type, p.breed, p.price
+              FROM adoption_requests ar
+              JOIN users u ON ar.user_id = u.user_id
+              JOIN pets p ON ar.pet_id = p.pet_id
+              WHERE p.added_by_user_id = ?
+              ORDER BY ar.requested_on DESC";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $user_id);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+function statusColor($status) {
+    return match ($status) {
+        'approved' => 'success',
+        'rejected' => 'danger',
+        default => 'warning',
+    };
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +82,14 @@ if (isset($_GET['action'], $_GET['id'])) {
 </head>
 <body class="container mt-5">
 
-    <h2>🐾 All Adoption Requests</h2>
+    <h2>🐾 Adoption Requests</h2>
+        <?php if (!isset($_SESSION['admin_id'])): ?>
+        <div class="alert alert-info mt-3">
+            ℹ️ <strong>Note:</strong> Only administrators can approve or reject requests. 
+            You can view requests for the pets you’ve added.
+        </div>
+        <?php endif; ?>
+
 
     <table class="table table-bordered table-striped mt-4">
         <thead class="table-dark">
@@ -57,88 +104,66 @@ if (isset($_GET['action'], $_GET['id'])) {
             </tr>
         </thead>
         <tbody>
-            <?php
-            $query = "SELECT ar.request_id, ar.requested_on, ar.status, 
-                             ar.full_name, ar.email, ar.phone, ar.address, ar.experience, ar.reason,
-                             u.name AS user_name, 
-                             p.name AS pet_name, p.type, p.breed,p.price
-                      FROM adoption_requests ar
-                      JOIN users u ON ar.user_id = u.user_id
-                      JOIN pets p ON ar.pet_id = p.pet_id
-                      ORDER BY ar.requested_on DESC";
+            <?php while ($row = $result->fetch_assoc()): 
+                $modalId = "detailsModal" . $row['request_id']; ?>
+                <tr>
+                    <td><?= $row['request_id'] ?></td>
+                    <td><?= htmlspecialchars($row['full_name']) ?></td>
+                    <td><?= htmlspecialchars($row['pet_name']) ?></td>
+                    <td><?= substr($row['reason'], 0, 30) ?>...</td>
+                    <td><?= $row['requested_on'] ?></td>
+                    <td><span class="badge text-bg-<?= statusColor($row['status']) ?>"><?= ucfirst($row['status']) ?></span></td>
+                    <td>
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">View</button>
+                        <?php if (isset($_SESSION['admin_id']) && $row['status'] === 'pending'): ?>
+                            <a href="adoption_requests.php?action=approved&id=<?= $row['request_id'] ?>" class="btn btn-success btn-sm me-1">Approve</a>
+                            <a href="adoption_requests.php?action=rejected&id=<?= $row['request_id'] ?>" class="btn btn-danger btn-sm">Reject</a>
+                        <?php else: ?>
+                            -
+                        <?php endif; ?>
+                    </td>
+                </tr>
 
-            $result = $conn->query($query);
-            while ($row = $result->fetch_assoc()) {
-                $modalId = "detailsModal" . $row['request_id'];
-
-                echo "<tr>
-                        <td>{$row['request_id']}</td>
-                        <td>{$row['full_name']}</td>
-                        <td>{$row['pet_name']}</td>
-                        <td>" . substr($row['reason'], 0, 30) . "...</td>
-                        <td>{$row['requested_on']}</td>
-                        <td><span class='badge text-bg-" . statusColor($row['status']) . "'>" . ucfirst($row['status']) . "</span></td>
-                        <td>
-                            <button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#$modalId'>View</button>";
-
-                if ($row['status'] === 'pending') {
-                    echo " <a href='adoption_requests.php?action=approved&id={$row['request_id']}' class='btn btn-success btn-sm me-1'>Approve</a>
-                           <a href='adoption_requests.php?action=rejected&id={$row['request_id']}' class='btn btn-danger btn-sm'>Reject</a>";
-                } else {
-                    echo " -";
-                }
-
-                echo "</td>
-                </tr>";
-
-                // Modal for full details
-                echo "
-                <div class='modal fade' id='$modalId' tabindex='-1' aria-hidden='true'>
-                  <div class='modal-dialog modal-lg'>
-                    <div class='modal-content'>
-                      <div class='modal-header'>
-                        <h5 class='modal-title'>Adoption Request #{$row['request_id']}</h5>
-                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                <!-- Modal -->
+                <div class="modal fade" id="<?= $modalId ?>" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Adoption Request #<?= $row['request_id'] ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                       </div>
-                      <div class='modal-body'>
+                      <div class="modal-body">
                         <h6>👤 Applicant Info</h6>
-                        <p><strong>Name:</strong> {$row['full_name']}<br>
-                           <strong>Email:</strong> {$row['email']}<br>
-                           <strong>Phone:</strong> {$row['phone']}<br>
-                           <strong>Address:</strong> {$row['address']}<br>
-                           <strong>Experience:</strong> {$row['experience']}</p>
+                        <p><strong>Name:</strong> <?= $row['full_name'] ?><br>
+                           <strong>Email:</strong> <?= $row['email'] ?><br>
+                           <strong>Phone:</strong> <?= $row['phone'] ?><br>
+                           <strong>Address:</strong> <?= $row['address'] ?><br>
+                           <strong>Experience:</strong> <?= $row['experience'] ?></p>
                         
                         <h6>🐶 Pet Info</h6>
-                        <p><strong>Name:</strong> {$row['pet_name']}<br>
-                           <strong>Type:</strong> {$row['type']}<br>
-                           <strong>Price:</strong> {$row['price']}<br>
-                           <strong>Breed:</strong> {$row['breed']}</p>
+                        <p><strong>Name:</strong> <?= $row['pet_name'] ?><br>
+                           <strong>Type:</strong> <?= $row['type'] ?><br>
+                           <strong>Price:</strong> ₹<?= $row['price'] ?><br>
+                           <strong>Breed:</strong> <?= $row['breed'] ?></p>
                         <h6>📄 Reason for Adoption</h6>
-                        <p>{$row['reason']}</p>
+                        <p><?= $row['reason'] ?></p>
                       </div>
-                      <div class='modal-footer'>
-                        <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>";
-                if ($row['status'] === 'pending') {
-                    echo "<a href='adoption_requests.php?action=approved&id={$row['request_id']}' class='btn btn-success'>Approve</a>
-                          <a href='adoption_requests.php?action=rejected&id={$row['request_id']}' class='btn btn-danger'>Reject</a>";
-                }
-                echo "</div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <?php if (isset($_SESSION['admin_id']) && $row['status'] === 'pending'): ?>
+                            <a href="adoption_requests.php?action=approved&id=<?= $row['request_id'] ?>" class="btn btn-success">Approve</a>
+                            <a href="adoption_requests.php?action=rejected&id=<?= $row['request_id'] ?>" class="btn btn-danger">Reject</a>
+                        <?php endif; ?>
+                      </div>
                     </div>
                   </div>
-                </div>";
-            }
-
-            function statusColor($status) {
-                return match ($status) {
-                    'approved' => 'success',
-                    'rejected' => 'danger',
-                    default => 'warning',
-                };
-            }
-            ?>
+                </div>
+            <?php endwhile; ?>
         </tbody>
     </table>
 
-    <a href="admin_dashboard.php" class="btn btn-secondary mt-3">← Back to Admin Dashboard</a>
+    <?php $dashboard_link = isset($_SESSION['admin_id']) ? 'admin_dashboard.php' : 'dashboard.php'; ?>
+    <a href="<?= $dashboard_link ?>" class="btn btn-secondary mt-3">← Back to Dashboard</a>
+
 </body>
 </html>
