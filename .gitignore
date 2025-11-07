@@ -8,5 +8,4 @@ pet_adoption_system.sql
 Thumbs.db
 # Ignore log files
 contact_message.txt
-database/*.sql
 pet_adoption_full.sql
