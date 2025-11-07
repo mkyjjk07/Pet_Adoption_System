@@ -1,8 +1,11 @@
 # Ignore sensitive or local config files
 .env
-
+pet_adoption_system.sql
 # Ignore system or IDE files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+# Ignore log files
+contact_message.txt
+database/*.sql
