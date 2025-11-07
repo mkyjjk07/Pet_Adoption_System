@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: admin_login.php");
+if (!isset($_SESSION['admin_id']) && !isset($_SESSION['user_id'])) {
+    header("Location: login.php"); 
     exit();
 }
 include 'includes/config.php';
@@ -9,15 +9,35 @@ include 'includes/config.php';
 // Handle deletion safely via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $id = intval($_POST['delete_id']);
-    $stmt = $conn->prepare("DELETE FROM pets WHERE pet_id = ?");
-    $stmt->bind_param("i", $id);
+    if (isset($_SESSION['admin_id'])) {
+        // Admins can delete any pet
+        $stmt = $conn->prepare("DELETE FROM pets WHERE pet_id = ?");
+        $stmt->bind_param("i", $id);
+    } elseif (isset($_SESSION['user_id'])) {
+        // Volunteers can delete only their own added pets
+        $user_id = intval($_SESSION['user_id']);
+        $stmt = $conn->prepare("DELETE FROM pets WHERE pet_id = ? AND added_by_user_id = ?");
+        $stmt->bind_param("ii", $id, $user_id);
+    }
+
     $stmt->execute();
     header("Location: manage_pets.php");
     exit();
 }
 
 // Fetch pets
-$result = $conn->query("SELECT * FROM pets ORDER BY added_on DESC");
+if (isset($_SESSION['admin_id'])) {
+    // Admin or Super Admin → view all pets
+    $result = $conn->query("SELECT * FROM pets ORDER BY added_on DESC");
+} elseif (isset($_SESSION['user_id'])) {
+    // Volunteer → view only pets they added
+    $user_id = intval($_SESSION['user_id']);
+    $stmt = $conn->prepare("SELECT * FROM pets WHERE added_by_user_id = ? ORDER BY added_on DESC");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +65,11 @@ $result = $conn->query("SELECT * FROM pets ORDER BY added_on DESC");
 
 <div class="d-flex justify-content-between mb-3">
     <a href="add_pet.php" class="btn btn-success"><i class="fa fa-plus me-1"></i> Add New Pet</a>
-    <a href="admin_dashboard.php" class="btn btn-secondary"><i class="fa fa-arrow-left me-1"></i> Back to Dashboard</a>
+    <?php
+    $dashboard_link = isset($_SESSION['admin_id']) ? 'admin_dashboard.php' : 'dashboard.php';
+    ?>
+    <a href="<?= $dashboard_link ?>" class="btn btn-secondary"><i class="fa fa-arrow-left me-1"></i> Back to Dashboard</a>
+
 </div>
 
 <div class="table-responsive">
@@ -129,7 +153,7 @@ $result = $conn->query("SELECT * FROM pets ORDER BY added_on DESC");
             </div>
         <?php endwhile; ?>
     <?php else: ?>
-        <tr><td colspan="9" class="text-center">No pets found.</td></tr>
+        <tr><td colspan="9" class="text-center">No pets found. You haven't added any pet </td></tr>
     <?php endif; ?>
     </tbody>
 </table>

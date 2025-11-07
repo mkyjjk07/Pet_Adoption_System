@@ -8,13 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT admin_id, first_name, last_name, password, role FROM admins WHERE email = ? LIMIT 1");
+    // Include status field to check if the admin account is active or not
+    $stmt = $conn->prepare("SELECT admin_id, first_name, last_name, password, role, status FROM admins WHERE email = ? LIMIT 1");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $res = $stmt->get_result();
 
     if ($row = $res->fetch_assoc()) {
-        if (password_verify($password, $row['password'])) {
+        if ($row['status'] !== 'active') {
+            $error = "Your account has been deactivated by the Super Admin.";
+        } elseif (password_verify($password, $row['password'])) {
             // ✅ Store all needed details in session
             $_SESSION['admin_id']   = $row['admin_id'];
             $_SESSION['admin_name'] = trim($row['first_name'] . ' ' . $row['last_name']);
@@ -37,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Admin Login | PetNest</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-light">
 <?php include 'includes/navbar.php'; ?>
@@ -47,7 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h3 class="mb-3">🔐 Admin Login</h3>
 
       <?php if ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+        <script>
+          Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: <?= json_encode($error) ?>,
+            confirmButtonColor: '#2563eb'
+          });
+        </script>
       <?php endif; ?>
 
       <form method="POST" novalidate autocomplete="off">
@@ -56,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input class="form-control" type="email" name="email" required 
                  autocomplete="off" onfocus="this.removeAttribute('readonly');" readonly>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input class="form-control" type="password" name="password" required 
-                 autocomplete="new-password" onfocus="this.removeAttribute('readonly');" readonly>
+        <div class="col-md-12 mb-3 position-relative">
+          <input id="password" class="form-control" type="password" name="password" placeholder="Password" required>
+          <span id="togglePassword" class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor:pointer;">
+            <i class="bi bi-eye-slash"></i>
+          </span>
         </div>
         <button class="btn btn-primary w-100" type="submit">Login</button>
       </form>
@@ -71,6 +84,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+  let hideTimeout;
+
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.innerHTML = type === 'password'
+      ? '<i class="bi bi-eye-slash"></i>'
+      : '<i class="bi bi-eye"></i>';
+
+    // Auto hide password after 3 seconds if shown
+    if (type === 'text') {
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => {
+        password.setAttribute('type', 'password');
+        togglePassword.innerHTML = '<i class="bi bi-eye-slash"></i>';
+      }, 3000);
+    }
+  });
+</script>
 </body>
 </html>
