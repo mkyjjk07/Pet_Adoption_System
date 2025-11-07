@@ -180,7 +180,7 @@ footer {
             <a href="manage_admins.php"><i class="fa fa-users-cog me-2"></i> Manage Admins</a>
         <?php endif; ?>
 
-        <a href="admin_donations.php"><i class="fa fa-donate me-2"></i> Donations</a>
+        <a href="donations.php"><i class="fa fa-hand-holding-heart me-2"></i> Donations Overview</a>
         <a href="admin_profile.php"><i class="fa fa-user me-2"></i> Profile</a>
         <a href="logout.php"><i class="fa fa-sign-out-alt me-2"></i> Logout</a>
     </div>

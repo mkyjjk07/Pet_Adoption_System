@@ -9,34 +9,47 @@ include 'includes/config.php';
 // Handle deletion safely via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $id = intval($_POST['delete_id']);
+
     if (isset($_SESSION['admin_id'])) {
-        // Admins can delete any pet
+        // 🛡 Admins can truly delete any pet
         $stmt = $conn->prepare("DELETE FROM pets WHERE pet_id = ?");
         $stmt->bind_param("i", $id);
+        $stmt->execute();
+
     } elseif (isset($_SESSION['user_id'])) {
-        // Volunteers can delete only their own added pets
+        // 🐾 Volunteers can't truly delete — they transfer ownership to admin (ID=1)
         $user_id = intval($_SESSION['user_id']);
-        $stmt = $conn->prepare("DELETE FROM pets WHERE pet_id = ? AND added_by_user_id = ?");
+
+        // Update the added_by_user_id to 1 (admin)
+        $stmt = $conn->prepare("UPDATE pets SET added_by_user_id = 1 WHERE pet_id = ? AND added_by_user_id = ?");
         $stmt->bind_param("ii", $id, $user_id);
+        $stmt->execute();
     }
 
-    $stmt->execute();
     header("Location: manage_pets.php");
     exit();
 }
+
 
 // Fetch pets
 if (isset($_SESSION['admin_id'])) {
     // Admin or Super Admin → view all pets
     $result = $conn->query("SELECT * FROM pets ORDER BY added_on DESC");
+
 } elseif (isset($_SESSION['user_id'])) {
-    // Volunteer → view only pets they added
+    // Volunteer → view only pets they added (not transferred ones)
     $user_id = intval($_SESSION['user_id']);
-    $stmt = $conn->prepare("SELECT * FROM pets WHERE added_by_user_id = ? ORDER BY added_on DESC");
+    $stmt = $conn->prepare("
+        SELECT * FROM pets 
+        WHERE added_by_user_id = ? 
+        ORDER BY added_on DESC
+    ");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 }
+?>
+
 
 ?>
 <!DOCTYPE html>

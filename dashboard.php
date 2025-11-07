@@ -1,3 +1,4 @@
+
 <?php 
 session_start();
 if (!isset($_SESSION['user_id'])) {
@@ -71,7 +72,7 @@ if ($role === 'volunteer') {
     color: white;
     padding-top: 22px;
     position: fixed;
-    width: 230px;
+    width: 250px;
     box-shadow: 3px 0 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -267,8 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <a href="adoption_requests.php"><i class="fa fa-file-alt me-2"></i>Adoption Request</a>
             <a href="my_requests.php"><i class="fa fa-file-alt me-2"></i>My Request</a>
             <a href="donate.php"><i class="fa fa-donate me-2"></i> Donate</a>
-             <a href="donation_history.php"><i class="fa fa-history me-2"></i> My Donations</a>
-            <a href="volunteer_donations.php"><i class="fa fa-hand-holding-heart me-2"></i> Donations Overview</a>
+            <a href="donation_history.php"><i class="fa fa-history me-2"></i> My Donations</a>
         <?php elseif($role === 'guest'): ?>
             <a href="view_pets.php"><i class="fa fa-dog me-2"></i> Browse Pets</a>
             <a href="upgrade.php"><i class="fa fa-dog me-2"></i> Become adopter</a>

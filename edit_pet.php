@@ -23,6 +23,32 @@ $stmt->execute();
 $result = $stmt->get_result();
 $pet = $result->fetch_assoc();
 
+// 🔒 Restrict volunteers from editing adopted pets
+if (isset($_SESSION['user_id']) && $pet['status'] === 'adopted') {
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Access Restricted</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Not Allowed',
+                text: 'This pet has already been adopted and cannot be updated.',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = 'dashboard.php';
+            });
+        </script>
+    </body>
+    </html>
+    <?php
+    exit;
+}
 if (!$pet) {
     die("Pet not found.");
 }
@@ -81,6 +107,7 @@ $dashboard_link = isset($_SESSION['admin_id']) ? "admin_dashboard.php" : "dashbo
 <title>Edit Pet</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="container mt-5">
 <div class="card p-4 mx-auto" style="max-width: 700px;">
