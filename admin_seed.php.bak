@@ -1,8 +1,10 @@
 <?php
 include 'includes/config.php';
 
-$email = "admin001@petnest.com";
-$password = password_hash("admin123", PASSWORD_DEFAULT);
+// Fetch credentials from environment variables
+$email = getenv('ADMIN_EMAIL');
+$passwordPlain = getenv('ADMIN_PASS');
+$password = password_hash($passwordPlain, PASSWORD_DEFAULT);
 
 $sql = "UPDATE admins SET password='$password' WHERE email='$email'";
 if (mysqli_query($conn, $sql)) {
