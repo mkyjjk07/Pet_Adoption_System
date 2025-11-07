@@ -1,7 +1,41 @@
 <?php
 session_start();
 include 'includes/config.php';
+
+$successMsg = '';
+$errorMsg = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $first_name = trim($_POST['first_name']);
+    $last_name  = trim($_POST['last_name']);
+    $email      = trim($_POST['email']);
+    $message    = trim($_POST['message']);
+    $country    = $_POST['country'] ?? 'Unknown';
+
+    // Validate basic inputs
+    if ($first_name && $last_name && $email && $message) {
+        // Create a formatted string
+        $entry  = "---------------------------\n";
+        $entry .= "Date: " . date('Y-m-d H:i:s') . "\n";
+        $entry .= "Name: $first_name $last_name\n";
+        $entry .= "Email: $email\n";
+        $entry .= "Country: $country\n";
+        $entry .= "Message:\n$message\n";
+        $entry .= "---------------------------\n\n";
+
+        // Save to file
+        $file = __DIR__ . '/contact_messages.txt';
+        if (file_put_contents($file, $entry, FILE_APPEND | LOCK_EX)) {
+            $successMsg = "Thank you! Your message has been received.";
+        } else {
+            $errorMsg = "Oops! Something went wrong. Please try again.";
+        }
+    } else {
+        $errorMsg = "Please fill all required fields.";
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +48,7 @@ include 'includes/config.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <?php include 'includes/navbar.php'; ?>
 
     <div class="container my-5">
@@ -23,6 +58,13 @@ include 'includes/config.php';
                 <h2 class="mb-3">Get in Touch with Us</h2>
                 <p>Have questions about adopting a pet?   OR want to give feedback, feel free to fill out the form below and our team will get back to you shortly.</p>
                 <form method="POST" class="mt-3">
+                    <?php if($successMsg): ?>
+                        <div class="alert alert-success"><?php echo htmlspecialchars($successMsg); ?></div>
+                    <?php endif; ?>
+                    <?php if($errorMsg): ?>
+                        <div class="alert alert-danger"><?php echo htmlspecialchars($errorMsg); ?></div>
+                    <?php endif; ?>
+
                     <div class="row mb-2">
                         <div class="col">
                             <input type="text" class="form-control" name="first_name" placeholder="First Name" required>

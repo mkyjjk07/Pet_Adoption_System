@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <hr>
                   <p style='margin-top:10px;'>Best regards,<br><strong>PetNest Team</strong></p>
                   <p><strong>Contact us:</strong> 
-                      <a href='mailto:progroupbca07@gmail.com' style='color:#2c7be5;'>progroupbca07@gmail.com</a>
+                      <a href='mailto:contact@petadopt.com' style='color:#2c7be5;'>contact@petadopt.com</a>
                   </p>
                   <p style='color:red; font-size:12px;'>
                       <i>This is an auto-generated email, please do not reply.</i>
