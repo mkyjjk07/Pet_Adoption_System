@@ -36,12 +36,12 @@ $adopted_pets = $adoptedQuery->fetch_assoc()['adopted'];
 
 /* Sidebar */
 .sidebar {
-    height: 100vh;
+    height: 200vh;
     background: linear-gradient(180deg, #4f46e5, #7c3aed);
     color: white;
     padding-top: 25px;
     position: fixed;
-    width: 240px;
+    width: 280px;
     box-shadow: 3px 0 10px rgba(0,0,0,0.2);
 }
 
@@ -177,7 +177,7 @@ footer {
         <a href="adoption_requests.php"><i class="fa fa-file-alt me-2"></i> Manage Requests</a>
 
         <?php if ($role === 'super_admin') : ?>
-            <a href="manage_admins.php"><i class="fa fa-users-cog me-2"></i> Manage Admins</a>
+            <a href="manage_admins.php"><i class="fa fa-users-cog me-2"></i> Manage Admins & Users</a>
         <?php endif; ?>
 
         <a href="donations.php"><i class="fa fa-hand-holding-heart me-2"></i> Donations Overview</a>
