@@ -82,7 +82,7 @@ $user_id = $_SESSION['user_id'];
 
     <div class="d-flex justify-content-between mt-4">
         <a href="dashboard.php" class="btn btn-secondary">← Back to Dashboard</a>
-        <a href="view_pets.php" class="btn btn-primary">🐾 Request for Adoption</a>
+        <a href="view_pets.php" class="btn btn-primary">🐾Adopt more pet</a>
     </div>
 </body>
 </html>

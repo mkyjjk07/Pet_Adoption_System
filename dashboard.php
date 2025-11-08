@@ -46,8 +46,8 @@ if ($role === 'adopter') {
 // Volunteer stats
 $vol_pets_total = $vol_requests_total = 0;
 if ($role === 'volunteer') {
-    $vol_pets_total = $conn->query("SELECT COUNT(*) AS total FROM pets")->fetch_assoc()['total'];
-    $vol_requests_total = $conn->query("SELECT COUNT(*) AS total FROM adoption_requests")->fetch_assoc()['total'];
+    $vol_pets_total = $conn->query("SELECT COUNT(*) AS total FROM pets WHERE status='available'")->fetch_assoc()['total'];
+    $vol_requests_total = $conn->query("SELECT COUNT(*) AS total FROM adoption_requests WHERE status='pending'")->fetch_assoc()['total'];
 }
 
 ?>
@@ -272,6 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <?php elseif($role === 'guest'): ?>
             <a href="view_pets.php"><i class="fa fa-dog me-2"></i> Browse Pets</a>
             <a href="upgrade.php"><i class="fa fa-dog me-2"></i> Become adopter</a>
+            <a href="donate.php"><i class="fa fa-hand-holding-heart me-2"></i> Donate Funds</a>
+            <a href="donation_history.php"><i class="fa fa-history me-2"></i> My Donations</a>
         <?php else: ?>
             <!-- Adopter -->
             <a href="view_pets.php"><i class="fa fa-dog me-2"></i> View Pets</a>
@@ -297,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="col-md-4">
                     <div class="card text-white bg-primary p-3">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="fa fa-dog me-2"></i>Total Pets</h5>
+                            <h5 class="card-title"><i class="fa fa-dog me-2"></i>Available Pets in Shelter</h5>
                             <p class="card-text"><?php echo $vol_pets_total; ?></p>
                         </div>
                     </div>
@@ -305,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="col-md-4">
                     <div class="card text-dark bg-warning p-3">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="fa fa-file-alt me-2"></i>Pending Requests</h5>
+                            <h5 class="card-title"><i class="fa fa-file-alt me-2"></i>Pending Requests in Shelter</h5>
                             <p class="card-text"><?php echo $vol_requests_total; ?></p>
                         </div>
                     </div>
@@ -314,8 +316,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="col-md-4">
                     <div class="card text-white bg-primary p-3">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="fa fa-dog me-2"></i>Available Pets</h5>
+                            <h5 class="card-title"><i class="fa fa-dog me-2"></i>Available Pets in Shelter</h5>
                             <p class="card-text"><?php echo $available_pets; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-dark bg-warning p-3">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fa fa-hand-holding-heart me-2"></i>My Donations</h5>
+                            <p class="mb-1"><strong>Total:</strong> ₹<?php echo $total_donations; ?></p>
+                            <?php if ($latest): ?>
+                                <p class="mb-1"><strong>Last:</strong> ₹<?php echo $latest['amount']; ?> (<?php echo $latest['donation_type']; ?>)</p>
+                                <small class="text-muted">on <?php echo date("d M Y, h:i A", strtotime($latest['created_at'])); ?></small>
+                            <?php else: ?>
+                                <p>You haven’t made any donation yet.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -49,6 +49,7 @@ if ($result->num_rows > 0) {
             } else {
                 $message = "❌ Error submitting request.";
             }
+            
         }
     }
 } else {
@@ -135,8 +136,9 @@ if ($result->num_rows > 0) {
               <button type="submit" class="btn btn-success w-100">Submit Request</button>
               <a href="view_pets.php" class="btn btn-secondary w-100 mt-2">Cancel</a>
             </form>
+            
           <?php endif; ?>
-
+             
         </div>
       </div>
     </div>

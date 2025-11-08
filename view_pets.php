@@ -156,19 +156,29 @@ function showPetDetails(pet) {
 
     const adoptBtn = document.getElementById("adoptBtn");
     
-    if(userRole === "guest") {
+    if (userRole === "guest") {
+    adoptBtn.href = "#";
+    adoptBtn.onclick = function(e){
+        e.preventDefault();
+        Swal.fire({
+            icon: 'info',
+            title: 'Upgrade Required',
+            text: 'You need to upgrade to Adopter to adopt a pet!',
+            confirmButtonText: 'OK'
+        });
+    };
+    } else if (pet.already_requested === 1) {
         adoptBtn.href = "#";
-        adoptBtn.onclick = function(e){
-            e.preventDefault();
-            Swal.fire({
-                icon: 'info',
-                title: 'Upgrade Required',
-                text: 'You need to upgrade to Adopter to adopt a pet!',
-                confirmButtonText: 'OK'
-            });
-        };
+        adoptBtn.textContent = "Request Pending";
+        adoptBtn.classList.remove("btn-success");
+        adoptBtn.classList.add("btn-secondary");
+        adoptBtn.disabled = true;
     } else {
         adoptBtn.href = "adopt_pet.php?pet_id=" + pet.pet_id;
+        adoptBtn.textContent = "Adopt Now";
+        adoptBtn.classList.remove("btn-secondary");
+        adoptBtn.classList.add("btn-success");
+        adoptBtn.disabled = false;
         adoptBtn.onclick = null;
     }
 
