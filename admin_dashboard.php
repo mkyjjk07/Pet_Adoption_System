@@ -177,7 +177,7 @@ footer {
         <a href="adoption_requests.php"><i class="fa fa-file-alt me-2"></i> Manage Requests</a>
 
         <?php if ($role === 'super_admin') : ?>
-            <a href="manage_admins.php"><i class="fa fa-users-cog me-2"></i> Manage Admins & Users</a>
+            <a href="manage_AdminUsers.php"><i class="fa fa-users-cog me-2"></i> Manage Admins & Users</a>
         <?php endif; ?>
 
         <a href="donations.php"><i class="fa fa-hand-holding-heart me-2"></i> Donations Overview</a>
