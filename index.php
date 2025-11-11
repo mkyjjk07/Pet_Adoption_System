@@ -272,7 +272,7 @@ include 'includes/config.php';
     <div class="container">
       <h1>Find Your Perfect Companion 💜</h1>
       <p>Welcome to <strong>PetNest</strong> — where loving hearts meet furry friends. Adopt, care, and create memories that last a lifetime.</p>
-      <a href="view_pets.php" class="btn mt-3">Browse Pets</a>
+      <a href="about_us.php" class="btn mt-3">Know More About Us</a>
     </div>
   </section>
 

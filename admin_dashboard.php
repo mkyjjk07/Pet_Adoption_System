@@ -11,7 +11,7 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
 $role = $_SESSION['admin_role'] ?? 'staff';
 
 // ✅ Fetch counts dynamically
-$totalPetsQuery = $conn->query("SELECT COUNT(*) AS total FROM pets");
+$totalPetsQuery = $conn->query("SELECT COUNT(*) AS total FROM pets WHERE status='available'");
 $total_pets = $totalPetsQuery->fetch_assoc()['total'];
 
 $pendingQuery = $conn->query("SELECT COUNT(*) AS pending FROM adoption_requests WHERE status='pending'");

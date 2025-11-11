@@ -28,7 +28,7 @@ if ($role === 'adopter') {
 // Total donations (only for adopter)
 $total_donations = 0;
 $latest = null;
-if ($role === 'adopter') {
+
     $stmt = $conn->prepare("SELECT SUM(amount) as total FROM donations WHERE user_id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -41,7 +41,7 @@ if ($role === 'adopter') {
     $stmt2->bind_param("i", $user_id);
     $stmt2->execute();
     $latest = $stmt2->get_result()->fetch_assoc();
-}
+
 
 // Volunteer stats
 $vol_pets_total = $vol_requests_total = 0;
@@ -197,20 +197,88 @@ if ($role === 'volunteer') {
     color: white;
 }
 
-/* Pet Cards */
+/* Responsive pet cards */
 .pet-card {
-    border-radius: 18px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
+
 .pet-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.15);
 }
-.pet-card img {
-    border-top-left-radius: 18px;
-    border-top-right-radius: 18px;
+
+.pet-img-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
 }
+
+.pet-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.pet-card:hover img {
+  transform: scale(1.08);
+  filter: brightness(70%);
+}
+
+/* Overlay details on hover */
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 102, 194, 0.85);
+  color: #fff;
+  height: 100%;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+  text-align: center;
+  padding: 20px;
+}
+
+.pet-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay-text h5 {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.overlay-text p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .pet-img-container {
+    height: 230px;
+  }
+  .overlay-text p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .pet-img-container {
+    height: 200px;
+  }
+}
+
+
 
 /* Headings */
 .quick-actions h4,
@@ -377,37 +445,44 @@ document.addEventListener('DOMContentLoaded', () => {
             <?php endif; ?>
         </div>
 
-        <!-- Latest Pets -->
-        <div class="mt-5">
-            <h4>Latest Available Pets</h4>
-            <div class="row">
-                <?php
-                $result = $conn->query("SELECT * FROM pets WHERE status='available' ORDER BY added_on DESC LIMIT 5");
-                if ($result->num_rows > 0):
-                    while ($pet = $result->fetch_assoc()):
-                ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm pet-card">
-                        <img src="assets/images/pet-uploads/<?php echo $pet['image']; ?>" class="card-img-top" height="180" style="object-fit:cover;" alt="Pet Image">
-                        <div class="card-body">
-                            <h6 class="fw-bold"><?php echo $pet['name']; ?></h6>
-                            <p class="card-text small mb-2">
+       <!-- Latest Pets -->
+<div class="mt-5">
+    <h4 class="fw-bold mb-3">Latest Available Pets 🐾</h4>
+    <div class="row g-4">
+        <?php
+        $result = $conn->query("SELECT * FROM pets WHERE status='available' ORDER BY added_on DESC LIMIT 5");
+        if ($result->num_rows > 0):
+            while ($pet = $result->fetch_assoc()):
+        ?>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="pet-card card shadow-sm h-100">
+                <div class="pet-img-container">
+                    <img src="assets/images/pet-uploads/<?php echo $pet['image']; ?>" 
+                         class="card-img-top" 
+                         alt="<?php echo htmlspecialchars($pet['name']); ?>">
+                    <div class="overlay">
+                        <div class="overlay-text">
+                            <h5><?php echo htmlspecialchars($pet['name']); ?></h5>
+                            <p>
                                 <strong>Breed:</strong> <?php echo $pet['breed']; ?><br>
                                 <strong>Age:</strong> <?php echo $pet['age']; ?> yrs<br>
                                 <strong>Type:</strong> <?php echo $pet['type']; ?><br>
-                                <strong>Gender:</strong> <?php echo $pet['gender']; ?>
+                                <strong>Gender:</strong> <?php echo ucfirst($pet['gender']); ?>
                             </p>
                         </div>
                     </div>
                 </div>
-                <?php endwhile; else: ?>
-                    <p class="alert alert-info">No pets available right now.</p>
-                <?php endif; ?>
-            </div>
-            <div class="text-center mt-3">
-                <a href="view_pets.php" class="btn btn-outline-primary">See More Pets</a>
             </div>
         </div>
+        <?php endwhile; else: ?>
+            <p class="alert alert-info">No pets available right now.</p>
+        <?php endif; ?>
+    </div>
+    <div class="text-center mt-4">
+        <a href="view_pets.php" class="btn btn-outline-primary btn-lg px-4">See More Pets</a>
+    </div>
+</div>
+
 
     </div>
 </body>
