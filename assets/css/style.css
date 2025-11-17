@@ -2,10 +2,77 @@ body {
     background-color: #fefefe;
     font-family: 'Poppins', sans-serif;
 }
-.navbar-brand {
-    font-weight: bold;
+/* ========= UNIVERSAL NAVBAR STYLE (PetNest Gradient Navbar) ========= */
+
+.main-navbar {
+    background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+    padding: 15px 25px !important;
     font-size: 1.5rem;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+    z-index: 1000;
+    position: relative;
 }
+
+/* Brand: 🐾 PetNest */
+.main-navbar .navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333 !important;
+    letter-spacing: 0.5px;
+}
+
+/* Navbar Links */
+.main-navbar .nav-link {
+    color: #2b2b2b !important;
+    font-weight: 500;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    transition: 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.main-navbar .nav-link:hover {
+    color: #5e2baa !important;
+    transform: translateY(-2px);
+    font-weight: 600;
+}
+
+/* Align all menu items to the RIGHT */
+.navbar-nav {
+    margin-left: auto !important;
+}
+
+/* Toggler (for small screens) */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    filter: brightness(0) invert(1); /* White icon */
+}
+
+/* Mobile dropdown styling */
+@media (max-width: 992px) {
+
+    .navbar-collapse {
+        background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+
+    .main-navbar .nav-link {
+        padding: 12px 0 !important;
+        font-size: 1.3rem;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .main-navbar .nav-link:last-child {
+        border-bottom: none;
+    }
+}
+
 .hero {
     background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('assets/images/banner.jpg') no-repeat center center/cover;
     height: 30vh;

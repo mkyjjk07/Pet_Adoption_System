@@ -14,6 +14,94 @@ include 'includes/config.php';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* --- GENERAL NICE LOOK --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f7f8ff;
+}
+
+/* Page title */
+h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #2d2d6b;
+}
+
+/* --- CARD HOVER EFFECT --- */
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: #ffffff;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.12);
+}
+
+/* Card image */
+.card-img-top {
+    height: 230px;
+    object-fit: cover;
+    transition: transform .3s ease;
+}
+
+/* Zoom image slightly on hover */
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* Card title */
+.card-title {
+    font-weight: 600;
+    color: #3a3a7a;
+}
+
+/* Card text */
+.card-text strong {
+    color: #4a4a93;
+}
+
+/* View Details button */
+.btn-outline-info {
+    border-radius: 50px;
+    font-weight: 600;
+    border-color: #6a5af9;
+    color: #6a5af9;
+    transition: all .3s ease;
+}
+
+.btn-outline-info:hover {
+    background: linear-gradient(45deg, #6a5af9, #a45df5);
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+/* --- FILTER FORM STYLING --- */
+#filterForm select,
+#filterForm input {
+    border-radius: 10px;
+    border: 1px solid #d3d3ff;
+    padding: 7px 12px;
+    transition: 0.2s;
+}
+
+#filterForm select:focus,
+#filterForm input:focus {
+    border-color: #6a5af9;
+    box-shadow: 0 0 8px rgba(106, 90, 249, 0.3);
+}
+
+/* Modal title */
+#petModalLabel {
+    color: #5b4ee6;
+    font-weight: 600;
+}
+
+  </style>
 </head>
 <body>
 <?php include 'includes/navbar.php'; ?>

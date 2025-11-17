@@ -11,65 +11,155 @@ include 'includes/config.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f8fafc;
-            color: #333;
-        }
-        .hero {
-            background: linear-gradient(rgba(37,99,235,0.8), rgba(37,99,235,0.8)), url('assets/images/about-banner.jpg') center/cover no-repeat;
-            color: white;
-            padding: 100px 20px;
-            text-align: center;
-        }
-        .hero h1 {
-            font-weight: 700;
-            font-size: 2.8rem;
-        }
-        .section {
-            padding: 60px 20px;
-        }
-        .section h2 {
-            color: #1e3a8a;
-            font-weight: 600;
-            margin-bottom: 25px;
-        }
-        .section p {
-            line-height: 1.7;
-            font-size: 1.05rem;
-        }
-        .how-it-works .step {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 25px;
-            text-align: center;
-            transition: 0.3s;
-        }
-        .how-it-works .step:hover {
-            transform: translateY(-5px);
-        }
-        .how-it-works i {
-            font-size: 2rem;
-            color: #2563eb;
-            margin-bottom: 15px;
-        }
-        .resources a {
-            text-decoration: none;
-            color: #2563eb;
-            font-weight: 500;
-        }
-        .resources a:hover {
-            text-decoration: underline;
-        }
-        .contact-info i {
-            color: #2563eb;
-            margin-right: 10px;
-        }
+/* GLOBAL DESIGN */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #fdfbff, #f3e8ff);
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Navbar same theme as index */
+nav.navbar {
+    background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* Soft Fade Animations */
+@keyframes fadeUp {
+    from {opacity: 0; transform: translateY(40px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeDown {
+    from {opacity: 0; transform: translateY(-40px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeScale {
+    from {opacity: 0; transform: scale(0.95);}
+    to {opacity: 1; transform: scale(1);}
+}
+
+/* HERO SECTION — same style as index page */
+.hero {
+    background: linear-gradient(135deg, rgba(147, 112, 219, 0.75), rgba(255, 182, 193, 0.75)),
+    url('assets/images/about-banner.jpg') center/cover no-repeat;
+    color: white;
+    padding: 120px 25px;
+    text-align: center;
+    animation: fadeDown 1s ease-out;
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    text-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+.hero p {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    max-width: 750px;
+    margin: auto;
+}
+
+/* ALL CONTENT SECTIONS */
+.section {
+    padding: 80px 25px;
+    animation: fadeUp 1.1s ease;
+}
+
+.section h2 {
+    color: #7a43d2;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.section p {
+    font-size: 1.07rem;
+    line-height: 1.75;
+    color: #4c4c4c;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* HOW IT WORKS — Animated Glass Cards */
+.how-it-works .step {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(123, 58, 255, 0.15);
+    transition: 0.35s ease;
+    animation: fadeScale 1.3s ease;
+}
+
+.how-it-works .step:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 45px rgba(123, 58, 255, 0.22);
+}
+
+/* Gradient Icons */
+.how-it-works i {
+    font-size: 2.8rem;
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* RESOURCE LINKS */
+.resources a {
+    color: #7a43d2;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.resources a:hover {
+    color: #9b4bff;
+    padding-left: 5px;
+}
+
+/* CONTACT SECTION */
+.contact-info i {
+    color: #7a43d2;
+    margin-right: 10px;
+}
+
+.contact-info a {
+    color: #7a43d2;
+    font-weight: 500;
+}
+
+/* SOCIAL ICON HOVER */
+.contact-info .fab {
+    color: #7a43d2;
+    transition: 0.3s ease;
+    font-size: 1.5rem;
+}
+
+.contact-info .fab:hover {
+    transform: scale(1.25);
+    color: #9b4bff;
+}
+
+/* Fade animation for list items */
+.resources li,
+.contact-info p {
+    animation: fadeUp 1.2s ease;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2.3rem; }
+    .hero p { font-size: 1.1rem; }
+}
+
     </style>
 </head>
 <body>
-
+<?php include 'includes/navbar.php'; ?>
 <?php include 'includes/header.php'; ?>
 
 <!-- Hero Section -->
@@ -168,6 +258,9 @@ include 'includes/config.php';
         <i class="fa fa-phone"></i> +91 98765 43210
     </p>
     <div class="mt-3">
+        <p>
+            Follow us on social media for updates, heartwarming stories, and more!
+        </p>
         <a href="#" class="me-3"><i class="fab fa-facebook fa-lg"></i></a>
         <a href="#" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
         <a href="#"><i class="fab fa-twitter fa-lg"></i></a>

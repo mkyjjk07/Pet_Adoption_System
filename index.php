@@ -35,7 +35,7 @@ include 'includes/config.php';
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(135deg, rgba(147, 112, 219, 0.9), rgba(255, 182, 193, 0.9)), url('assets/images/banner-pets.jpg') center/cover no-repeat;
+      background: linear-gradient(135deg, rgba(37, 31, 50, 0.9), rgba(255, 182, 193, 0.9)), url('assets/images/banner-pets.jpg') center/cover no-repeat;
       color: #fff;
       padding: 120px 0;
       text-align: center;
