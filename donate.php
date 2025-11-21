@@ -56,6 +56,14 @@ if (!isset($_SESSION['user_id'])) {
             <option value="Dog Food">🐶 Dog Food</option>
             <option value="Cat Shelter">🐱 Cat Shelter</option>
             <option value="Medical Care">🐾 Medical Care</option>
+            <option value="Vaccination & Medicines">💉 Vaccination & Medicines</option>
+            <option value="Rescue Operations">🚑 Emergency Rescue</option>
+            <option value="Adoption Support">🏡 Adoption & Foster Care</option>
+            <option value="Abandoned Animals">🐕‍🦺 Abandoned & Injured Animals</option>
+            <option value="Street Animal Feeding"> Feed Street Animals</option>
+            <option value="Animal Awareness Programs">📢 Awareness & Education</option>
+            <option value="Shelter Maintenance">🛠️ Shelter Repair & Maintenance</option>
+            <option value="Wildlife Protection">🌳 Wildlife & Nature Care</option>
         </select>
     </div>
 

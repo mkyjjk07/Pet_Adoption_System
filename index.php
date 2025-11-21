@@ -11,6 +11,7 @@ include 'includes/config.php';
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+   <link href="assets/css/style.css" rel="stylesheet">
 
   <style>
     * {
@@ -308,7 +309,7 @@ include 'includes/config.php';
       <p>Hover over to know more about each furry friend waiting for you!</p>
       <div class="pet-grid">
         <?php
-        $query = "SELECT * FROM pets WHERE status='available' ORDER BY RAND() LIMIT 6";
+        $query = "SELECT * FROM pets WHERE status='available' ORDER BY RAND() LIMIT 9";
         $result = $conn->query($query);
         if ($result->num_rows > 0) {
           while ($pet = $result->fetch_assoc()) {

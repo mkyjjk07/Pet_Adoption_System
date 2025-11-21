@@ -10,157 +10,168 @@ include 'includes/config.php';
     <title>About Us | PetAdopt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
     <style>
-/* GLOBAL DESIGN */
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #fdfbff, #f3e8ff);
-    color: #333;
-    overflow-x: hidden;
-}
+    /* GLOBAL DESIGN */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #fdfbff, #f3e8ff);
+        color: #333;
+        overflow-x: hidden;
+    }
 
-/* Navbar same theme as index */
-nav.navbar {
-    background: linear-gradient(90deg, #a18cd1, #fbc2eb);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-}
-
-/* Soft Fade Animations */
-@keyframes fadeUp {
-    from {opacity: 0; transform: translateY(40px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-
-@keyframes fadeDown {
-    from {opacity: 0; transform: translateY(-40px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-
-@keyframes fadeScale {
-    from {opacity: 0; transform: scale(0.95);}
-    to {opacity: 1; transform: scale(1);}
-}
-
-/* HERO SECTION — same style as index page */
-.hero {
-    background: linear-gradient(135deg, rgba(147, 112, 219, 0.75), rgba(255, 182, 193, 0.75)),
-    url('assets/images/about-banner.jpg') center/cover no-repeat;
-    color: white;
-    padding: 120px 25px;
-    text-align: center;
-    animation: fadeDown 1s ease-out;
-}
-
-.hero h1 {
-    font-size: 3.2rem;
-    font-weight: 800;
-    text-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-}
-
-.hero p {
-    font-size: 1.3rem;
-    opacity: 0.95;
-    max-width: 750px;
-    margin: auto;
-}
-
-/* ALL CONTENT SECTIONS */
-.section {
-    padding: 80px 25px;
-    animation: fadeUp 1.1s ease;
-}
-
-.section h2 {
-    color: #7a43d2;
-    font-weight: 700;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.section p {
-    font-size: 1.07rem;
-    line-height: 1.75;
-    color: #4c4c4c;
-    max-width: 900px;
-    margin: auto;
-}
-
-/* HOW IT WORKS — Animated Glass Cards */
-.how-it-works .step {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(8px);
-    border-radius: 18px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(123, 58, 255, 0.15);
-    transition: 0.35s ease;
-    animation: fadeScale 1.3s ease;
-}
-
-.how-it-works .step:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 20px 45px rgba(123, 58, 255, 0.22);
-}
-
-/* Gradient Icons */
-.how-it-works i {
-    font-size: 2.8rem;
-    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* RESOURCE LINKS */
-.resources a {
-    color: #7a43d2;
-    font-weight: 600;
-    transition: 0.3s ease;
-}
-
-.resources a:hover {
-    color: #9b4bff;
-    padding-left: 5px;
-}
-
-/* CONTACT SECTION */
-.contact-info i {
-    color: #7a43d2;
-    margin-right: 10px;
-}
-
-.contact-info a {
-    color: #7a43d2;
-    font-weight: 500;
-}
-
-/* SOCIAL ICON HOVER */
-.contact-info .fab {
-    color: #7a43d2;
-    transition: 0.3s ease;
-    font-size: 1.5rem;
-}
-
-.contact-info .fab:hover {
-    transform: scale(1.25);
-    color: #9b4bff;
-}
-
-/* Fade animation for list items */
-.resources li,
-.contact-info p {
-    animation: fadeUp 1.2s ease;
-}
-
-/* MOBILE RESPONSIVE */
-@media (max-width: 768px) {
-    .hero h1 { font-size: 2.3rem; }
-    .hero p { font-size: 1.1rem; }
-}
-
+    nav.navbar {
+      background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+      font-size: 2rem;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    /* Soft Fade Animations */
+    @keyframes fadeUp {
+        from {opacity: 0; transform: translateY(40px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+    
+    @keyframes fadeDown {
+        from {opacity: 0; transform: translateY(-40px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+    
+    @keyframes fadeScale {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
+    }
+    
+    /* HERO SECTION — same style as index page */
+    .hero {
+        background: linear-gradient(135deg, rgba(147, 112, 219, 0.75), rgba(255, 182, 193, 0.75)),
+        url('assets/images/about-banner.jpg') center/cover no-repeat;
+        color: white;
+        padding: 120px 25px;
+        text-align: center;
+        animation: fadeDown 1s ease-out;
+    }
+    
+    .hero h1 {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-weight: 800;
+        text-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .hero p {
+        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        opacity: 0.95;
+        max-width: 750px;
+        margin: auto;
+    }
+    
+    /* ALL CONTENT SECTIONS */
+    .section {
+        padding: 80px 25px;
+        animation: fadeUp 1.1s ease;
+    }
+    
+    .section h2 {
+        color: #7a43d2;
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-align: center;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+    }
+    
+    .section p {
+        font-size: clamp(1.1rem, 2.2vw, 1.25rem);
+        line-height: 1.8;
+        color: #4c4c4c;
+        max-width: 900px;
+        margin: auto;
+    }
+    
+    /* HOW IT WORKS — Animated Glass Cards */
+    .how-it-works .step {
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: 0 15px 35px rgba(123, 58, 255, 0.15);
+        transition: 0.35s ease;
+        animation: fadeScale 1.3s ease;
+    }
+    
+    .how-it-works .step:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 20px 45px rgba(123, 58, 255, 0.22);
+    }
+    
+    /* Gradient Icons */
+    .how-it-works i {
+        font-size: 2.8rem;
+        background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* RESOURCE LINKS */
+    .resources a {
+        color: #7a43d2;
+        font-weight: 600;
+        transition: 0.3s ease;
+    }
+    
+    .resources a:hover {
+        color: #9b4bff;
+        padding-left: 5px;
+    }
+    
+    /* CONTACT SECTION */
+    .contact-info i {
+        color: #7a43d2;
+        margin-right: 10px;
+    }
+    
+    .contact-info a {
+        color: #7a43d2;
+        font-weight: 500;
+    }
+    
+    /* SOCIAL ICON HOVER */
+    .contact-info .fab {
+        color: #7a43d2;
+        transition: 0.3s ease;
+        font-size: 1.5rem;
+    }
+    
+    .contact-info .fab:hover {
+        transform: scale(1.25);
+        color: #9b4bff;
+    }
+    
+    /* Fade animation for list items */
+    .resources li,
+    .contact-info p {
+        animation: fadeUp 1.2s ease;
+    }
+    
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 768px) {
+        .hero h1 { font-size: 2.3rem; }
+        .hero p { font-size: 1.1rem; }
+    }
+    @media (max-width: 768px) {
+        .step p {
+            font-size: 1rem;
+        }
+        .step h5 {
+            font-size: 1.1rem;
+        }
+    }   
     </style>
 </head>
 <body>
 <?php include 'includes/navbar.php'; ?>
-<?php include 'includes/header.php'; ?>
+
+
 
 <!-- Hero Section -->
 <section class="hero">
